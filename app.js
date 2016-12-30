@@ -2,6 +2,7 @@
 
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
+const cookieParser = require('cookie-parser');
 
 const accessLogger = require('./middlewares/access-logger');
 const authorization = require('./middlewares/authorization');
@@ -12,6 +13,7 @@ const schema = require('./libs/graphql/schema');
 
 const app = express();
 
+app.use(cookieParser());
 app.use(accessLogger);
 app.use(authorization);
 app.use(personCache);

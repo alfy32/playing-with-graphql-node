@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/alfy32/playing-with-graphql-node#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.3",
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "express-graphql": "^0.6.1",
