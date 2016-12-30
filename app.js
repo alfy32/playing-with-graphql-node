@@ -1,4 +1,4 @@
-// require('dotenv').config({silent: true});
+if ('production' !== process.env.NODE_ENV) require('dotenv').config();
 
 const express = require('express');
 const graphqlHTTP = require('express-graphql');

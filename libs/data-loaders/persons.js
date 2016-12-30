@@ -18,7 +18,7 @@ const loadPersons = (req, res) => {
 const fetchPerson = (req, res, id) => {
   const start = Date.now();
 
-  return fetch(`https://familysearch.org/tf/person/${id}/summary`, {
+  return fetch(`${process.env.TF_URI}/person/${id}/summary`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${res.locals.sessionId}`,
