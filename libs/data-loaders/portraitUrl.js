@@ -1,20 +1,22 @@
 const fetch = require('node-fetch');
 const requestLogger = require('./../logging/request-logger');
 
+const BROKEN_URL_PLACEHOLDER = 'broken';
+
 module.exports = (req, res) => {
   return (personIds) => {
-    const persons = [];
+    const portraitUrls = [];
     for (let id of personIds) {
-      persons.push(fetchPerson(req, res, id));
+      portraitUrls.push(fetchPortraitUrl(req, res, id));
     }
-    return Promise.all(persons);
-  }
+    return Promise.all(portraitUrls);
+  };
 };
 
-const fetchPerson = (req, res, id) => {
+const fetchPortraitUrl = (req, res, personId) => {
   const start = Date.now();
 
-  return fetch(`${process.env.TF_URI}/person/${id}/summary`, {
+  return fetch(`${process.env.ARTIFACT_MANAGER_URI}/persons/personsByTreePersonId/${personId}/summary`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${res.locals.sessionId}`,
@@ -23,10 +25,9 @@ const fetchPerson = (req, res, id) => {
   })
     .then((response) => {
       requestLogger(response, start, res.locals);
-
-      if (response.status != 200) {
-        throw "Failed to get person";
-      }
       return response.json();
+    })
+    .then((treePersonSummary) => {
+      return treePersonSummary.thumbSquareUrl || BROKEN_URL_PLACEHOLDER;
     });
 };

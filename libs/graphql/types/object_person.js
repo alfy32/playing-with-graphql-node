@@ -1,7 +1,5 @@
 const {GraphQLObjectType, GraphQLString, GraphQLBoolean} = require('graphql');
 const sexEnum = require('./enum_sex');
-const artifactManagerService = require('./../../service/artifact-manager-service');
-const watchService = require('./../../service/watch-service');
 
 module.exports = new GraphQLObjectType({
   name: "Person",
@@ -28,16 +26,14 @@ module.exports = new GraphQLObjectType({
     },
     portraitUrl: {
       type: GraphQLString,
-      resolve(parent, args, req) {
-        return artifactManagerService.getPortraitUrlPromise(parent, args, req);
-      }
+      resolve: (parent, args, req) =>
+        req.res.locals.dataLoaders.portraitUrl.load(parent.id)
     },
     watching: {
       type: GraphQLBoolean,
       description: "Is the current user watching this person?",
-      resolve(parent, args, req) {
-        return watchService.getWatchingPromise(parent, args, req);
-      }
+      resolve: (parent, args, req) =>
+        req.res.locals.dataLoaders.watching.load(parent.id)
     }
   }
 });

@@ -10,7 +10,7 @@ module.exports = {
 const getSessionPromise = (locals) => {
   const start = Date.now();
 
-  return fetch(`https://familysearch.org/cis-public-api/v4/session/${locals.sessionId}`, {
+  return fetch(`${process.env.CIS_PUBLIC_API_URI}/v4/session/${locals.sessionId}`, {
     method: "GET",
     headers: {
       Accept: 'application/json'
