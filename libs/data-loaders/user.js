@@ -1,5 +1,4 @@
-const fetch = require('node-fetch');
-const requestLogger = require('./../logging/request-logger');
+const fetchWrapper = require('./../fetch-wrapper');
 
 module.exports = (req, res) => {
   return (userIds) => {
@@ -12,18 +11,14 @@ module.exports = (req, res) => {
 };
 
 const fetchUser = (req, res, id) => {
-  const start = Date.now();
-
-  return fetch(`${process.env.FTUSER_URI}/users/${id}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${res.locals.sessionId}`,
-      Accept: 'application/json'
-    }
-  })
+  return fetchWrapper(req, res)
+    .fetch(`${process.env.FTUSER_URI}/users/${id}`, {
+      method: "GET",
+      headers: {
+        Accept: 'application/json'
+      }
+    })
     .then((response) => {
-      requestLogger(response, start, res.locals);
-
       if (response.status != 200) {
         throw "Failed to get user";
       }

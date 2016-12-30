@@ -1,5 +1,4 @@
-const fetch = require('node-fetch');
-const requestLogger = require('./../logging/request-logger');
+const fetchWrapper = require('./../fetch-wrapper');
 
 module.exports = (req, res) => {
   return (personIds) => {
@@ -12,17 +11,15 @@ module.exports = (req, res) => {
 };
 
 const fetchWatching = (req, res, personId) => {
-  const start = Date.now();
-
-  return fetch(`${process.env.WATCH_URI}/watches?resourceId=${personId}_p_fs-ft_production-primary`, {
-    method: "HEAD",
-    headers: {
-      Authorization: `Bearer ${res.locals.sessionId}`,
-      Accept: 'application/json'
-    }
-  })
+  return fetchWrapper(req, res)
+    .fetch(`${process.env.WATCH_URI}/watches?resourceId=${personId}_p_fs-ft_production-primary`, {
+      method: "HEAD",
+      headers: {
+        Authorization: `Bearer ${res.locals.sessionId}`,
+        Accept: 'application/json'
+      }
+    })
     .then((response) => {
-      requestLogger(response, start, res.locals);
       return response.status == 200;
     })
 };

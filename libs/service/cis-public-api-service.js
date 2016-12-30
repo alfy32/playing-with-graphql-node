@@ -1,24 +1,20 @@
-const fetch = require('node-fetch');
-const requestLogger = require('./../logging/request-logger');
+const fetchWrapper = require('./../fetch-wrapper');
 
 module.exports = {
   getSessionPromise: (req, res) => {
-    return getSessionPromise(res.locals);
+    return getSessionPromise(req, res);
   }
 };
 
-const getSessionPromise = (locals) => {
-  const start = Date.now();
-
-  return fetch(`${process.env.CIS_PUBLIC_API_URI}/v4/session/${locals.sessionId}`, {
-    method: "GET",
-    headers: {
-      Accept: 'application/json'
-    }
-  })
+const getSessionPromise = (req, res) => {
+  return fetchWrapper(req, res)
+    .fetch(`${process.env.CIS_PUBLIC_API_URI}/v4/session/${res.locals.sessionId}`, {
+      method: "GET",
+      headers: {
+        Accept: 'application/json'
+      }
+    })
     .then((response) => {
-      requestLogger(response, start, locals);
-
       if (response.status != 200) {
         throw "Invalid session";
       }

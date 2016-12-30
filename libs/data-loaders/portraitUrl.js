@@ -1,5 +1,4 @@
-const fetch = require('node-fetch');
-const requestLogger = require('./../logging/request-logger');
+const fetchWrapper = require('./../fetch-wrapper');
 
 const BROKEN_URL_PLACEHOLDER = 'broken';
 
@@ -14,17 +13,14 @@ module.exports = (req, res) => {
 };
 
 const fetchPortraitUrl = (req, res, personId) => {
-  const start = Date.now();
-
-  return fetch(`${process.env.ARTIFACT_MANAGER_URI}/persons/personsByTreePersonId/${personId}/summary`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${res.locals.sessionId}`,
-      Accept: 'application/json'
-    }
-  })
+  return fetchWrapper(req, res)
+    .fetch(`${process.env.ARTIFACT_MANAGER_URI}/persons/personsByTreePersonId/${personId}/summary`, {
+      method: "GET",
+      headers: {
+        Accept: 'application/json'
+      }
+    })
     .then((response) => {
-      requestLogger(response, start, res.locals);
       return response.json();
     })
     .then((treePersonSummary) => {
