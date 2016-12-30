@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 
 const accessLogger = require('./middlewares/access-logger');
 const authorization = require('./middlewares/authorization');
-const personCache = require('./middlewares/person-cache');
+const dataLoaders = require('./middlewares/data-loaders');
 
 const PORT = process.env.PORT || 4000;
 const schema = require('./libs/graphql/schema');
@@ -16,7 +16,7 @@ const app = express();
 app.use(cookieParser());
 app.use(accessLogger);
 app.use(authorization);
-app.use(personCache);
+app.use(dataLoaders);
 
 app.use('/graphql', graphqlHTTP({
   schema: schema,

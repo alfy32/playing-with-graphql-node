@@ -1,6 +1,5 @@
 const {GraphQLObjectType, GraphQLString, GraphQLBoolean} = require('graphql');
 const sexEnum = require('./enum_sex');
-const personService = require('./../../service/person-service');
 const artifactManagerService = require('./../../service/artifact-manager-service');
 const watchService = require('./../../service/watch-service');
 
@@ -11,24 +10,21 @@ module.exports = new GraphQLObjectType({
     id: {type: GraphQLString},
     name: {
       type: GraphQLString,
-      resolve(parent, args, context) {
-        return personService.getPersonPromise(parent, args, context)
-          .then((person) => person.summary.name);
-      }
+      resolve: (parent, args, req) =>
+        req.res.locals.dataLoaders.persons.load(parent.id)
+          .then((person) => person.summary.name)
     },
     sex: {
       type: sexEnum,
-      resolve(parent, args, req) {
-        return personService.getPersonPromise(parent, args, req)
-          .then((person) => person.summary.gender);
-      }
+      resolve: (parent, args, req) =>
+        req.res.locals.dataLoaders.persons.load(parent.id)
+          .then((person) => person.summary.gender)
     },
     lifespan: {
       type: GraphQLString,
-      resolve(parent, args, req) {
-        return personService.getPersonPromise(parent, args, req)
-          .then((person) => person.summary.lifespan);
-      }
+      resolve: (parent, args, req) =>
+        req.res.locals.dataLoaders.persons.load(parent.id)
+          .then((person) => person.summary.lifespan)
     },
     portraitUrl: {
       type: GraphQLString,
