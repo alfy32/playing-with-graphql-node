@@ -8,7 +8,10 @@ module.exports = {
 
     return fetch(`https://familysearch.org/watch/watches?resourceId=${parent.id}_p_fs-ft_production-primary`, {
       method: "HEAD",
-      headers: {Authorization: `Bearer ${locals.sessionId}`}
+      headers: {
+        Authorization: `Bearer ${locals.sessionId}`,
+        Accept: 'application/json'
+      }
     })
       .then((response) => {
         requestLogger(response, start, locals);

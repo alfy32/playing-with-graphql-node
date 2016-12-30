@@ -1,6 +1,7 @@
 const {GraphQLSchema, GraphQLObjectType, GraphQLString} = require('graphql');
 
 const personType = require('./types/object_person');
+const userType = require('./types/object_user');
 
 const query = new GraphQLObjectType({
   name: "FamilySearchQuery",
@@ -10,10 +11,16 @@ const query = new GraphQLObjectType({
       args: {
         id: {type: GraphQLString}
       },
-      resolve(parent, args, context) {
+      resolve(parent, args) {
         return {
           id: args.id
         }
+      }
+    },
+    user: {
+      type: userType,
+      resolve() {
+        return {}
       }
     }
   }

@@ -20,7 +20,10 @@ const getTreePersonSummaryPromise = (locals, personId) => {
 
   return fetch(`https://familysearch.org/artifactmanager/persons/personsByTreePersonId/${personId}/summary`, {
     method: "GET",
-    headers: {Authorization: `Bearer ${locals.sessionId}`}
+    headers: {
+      Authorization: `Bearer ${locals.sessionId}`,
+      Accept: 'application/json'
+    }
   })
     .then((response) => {
       requestLogger(response, start, locals);

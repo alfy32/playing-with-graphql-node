@@ -15,7 +15,10 @@ const getPerson = (locals, id) => {
   if (!personCache[id]) {
     personCache[id] = fetch(`https://familysearch.org/tf/person/${id}/summary`, {
       method: "GET",
-      headers: {Authorization: `Bearer ${locals.sessionId}`}
+      headers: {
+        Authorization: `Bearer ${locals.sessionId}`,
+        Accept: 'application/json'
+      }
     })
       .then((response) => {
         requestLogger(response, start, locals);
