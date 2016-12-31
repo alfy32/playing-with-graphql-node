@@ -8,13 +8,17 @@ const query = new GraphQLObjectType({
   fields: {
     person: {
       type: personType,
+      description: "Look up a Family Tree person by id",
       args: {
-        id: {type: GraphQLString}
+        id: {type: GraphQLString, description: "The id of the person. Defaults to startingPersonId preference"}
       },
-      resolve(parent, args) {
-        return {
-          id: args.id
-        }
+      resolve: (parent, args, req) => {
+        if (args.id) return {id: args.id};
+
+        return req.res.locals.dataLoaders.preferences.load('tree.startingPersonId')
+          .then((startingPersonId) => {
+            return {id: startingPersonId}
+          });
       }
     },
     user: {
