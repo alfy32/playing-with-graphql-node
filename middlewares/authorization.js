@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
   res.locals.sessionId = getSessionFromRequest(req);
 
   if (!res.locals.sessionId) {
-    return createErrorResponseJson("Missing Session Id");
+    return res.status(401).json(createErrorResponseJson('Missing Session Id'));
   }
 
   cisPublicApiService.getSessionPromise(req, res)
@@ -18,7 +18,7 @@ module.exports = (req, res, next) => {
     });
 };
 
-const createErrorResponseJson = (message) => {
+function createErrorResponseJson(message) {
   return {
     errors: [
       {
@@ -26,9 +26,9 @@ const createErrorResponseJson = (message) => {
       }
     ]
   }
-};
+}
 
-const getSessionFromRequest = (req) => {
+function getSessionFromRequest(req) {
   let sessionId;
 
   sessionId = req.query.sessionId;
@@ -47,9 +47,9 @@ const getSessionFromRequest = (req) => {
   }
 
   return undefined;
-};
+}
 
-const parseAuthorizationHeader = (req) => {
+function parseAuthorizationHeader(req) {
   const values = req.header("Authorization");
 
   if (values) {
@@ -61,4 +61,4 @@ const parseAuthorizationHeader = (req) => {
   }
 
   return undefined;
-};
+}
